@@ -1,10 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-scene="flow">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="theme-color" content="#0a0a12" />
+		<meta name="theme-color" content="#08080f" />
+		<script>
+			// Apply the saved backdrop's palette before first paint, so switching
+			// scenes doesn't flash the default theme on the next visit.
+			try {
+				var s =
+					new URLSearchParams(location.search).get('s') || localStorage.getItem('jyriv:scene');
+				if (s && /^[a-z]{3,12}$/.test(s)) document.documentElement.setAttribute('data-scene', s);
+			} catch (e) {}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
