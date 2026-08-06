@@ -8,8 +8,6 @@
 		{ label: 'Email', href: 'mailto:jyrive@gmail.com' }
 	];
 
-	const tags = ['Web', 'Mobile', 'Data', 'AI'];
-
 	let current = $state(scenes[0].id);
 	let mounted = $state(false);
 	let tiltX = $state(0);
@@ -84,7 +82,7 @@
 	<title>jyriv.net — Jyri</title>
 	<meta
 		name="description"
-		content="Jyri — experimenting across web, mobile, data and AI. Five interactive canvas and WebGL backdrops you can switch between."
+		content="Jyri — curious by nature. A personal page with five interactive canvas and WebGL backdrops you can switch between."
 	/>
 </svelte:head>
 
@@ -109,23 +107,15 @@
 		<section class="hero">
 			<h1>
 				<span class="line" style="--i: 0">Hi, I'm <em>Jyri</em>.</span>
-				<span class="line" style="--i: 1">I build things across</span>
-				<span class="line" style="--i: 2"><em>web, mobile, data &amp; AI</em>.</span>
+				<span class="line" style="--i: 1">Curious <em>by nature</em>.</span>
 			</h1>
 
-			<p class="lede" style="--i: 3">
-				I like making things and following curiosity wherever it leads — from web and mobile
-				apps to data pipelines and AI experiments. This page is one of those experiments:
-				every backdrop below is hand-written canvas or WebGL, running live.
+			<p class="lede" style="--i: 2">
+				Building and experimenting is less something I do than something I am. I like what's
+				visual and simple — and time outdoors, which is usually both.
 			</p>
 
-			<ul class="tags" style="--i: 4">
-				{#each tags as tag (tag)}
-					<li>{tag}</li>
-				{/each}
-			</ul>
-
-			<nav class="links" style="--i: 5" aria-label="Elsewhere">
+			<nav class="links" style="--i: 3" aria-label="Elsewhere">
 				{#each links as link (link.href)}
 					<a href={link.href} target="_blank" rel="noreferrer noopener">
 						{link.label}
@@ -134,7 +124,9 @@
 				{/each}
 			</nav>
 
-			<p class="colophon" style="--i: 6">SvelteKit · hand-written canvas &amp; WebGL</p>
+			<p class="colophon" style="--i: 4">
+				This page is one of the experiments — SvelteKit, hand-written canvas &amp; WebGL.
+			</p>
 		</section>
 	{/key}
 </main>
@@ -202,7 +194,7 @@
 		font-family: var(--font-display);
 		/* Bound by height as well as width so the card never outgrows short
 		   viewports — the mono and wide-tracking palettes wrap sooner. */
-		font-size: var(--h1-size, clamp(1.7rem, min(5.8vw, 6.7vh), 3.9rem));
+		font-size: var(--h1-size, clamp(1.8rem, min(6.4vw, 9vh), 4.4rem));
 		line-height: 1.04;
 		font-weight: 800;
 		letter-spacing: var(--tracking);
@@ -238,29 +230,6 @@
 		color: var(--muted);
 		animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 		animation-delay: calc(var(--i) * 70ms);
-	}
-
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem;
-		margin: clamp(0.85rem, 2.2vh, 1.5rem) 0 0;
-		padding: 0;
-		list-style: none;
-		animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-		animation-delay: calc(var(--i) * 70ms);
-	}
-
-	.tags li {
-		padding: 0.3rem 0.7rem;
-		border-radius: 999px;
-		font-size: 0.75rem;
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--muted);
-		background: var(--chip-bg);
-		border: 1px solid var(--chip-border);
 	}
 
 	.links {
@@ -369,7 +338,6 @@
 			font-size: var(--h1-size, clamp(1.4rem, min(5vw, 6.4vh), 2.4rem));
 		}
 
-		.tags,
 		.colophon {
 			display: none;
 		}
@@ -387,7 +355,6 @@
 
 		.line,
 		.lede,
-		.tags,
 		.links,
 		.colophon {
 			animation: none;

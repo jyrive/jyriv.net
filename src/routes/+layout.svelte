@@ -83,7 +83,7 @@
 		--font-body: var(--font-display);
 		--tracking: -0.01em;
 		/* Monospace runs much wider — pull the headline back a size. */
-		--h1-size: clamp(1.25rem, min(4.3vw, 5.4vh), 2.9rem);
+		--h1-size: clamp(1.35rem, min(4.9vw, 7vh), 3.3rem);
 	}
 
 	:global(html[data-scene='synth']) {
