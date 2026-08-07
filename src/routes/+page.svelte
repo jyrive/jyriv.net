@@ -82,7 +82,7 @@
 	<title>jyriv.net — Jyri</title>
 	<meta
 		name="description"
-		content="Jyri — curious by nature. A personal page with five interactive canvas and WebGL backdrops you can switch between."
+		content="jyriv.net — Jyri's personal page, with five interactive canvas and WebGL backdrops you can switch between."
 	/>
 </svelte:head>
 
@@ -107,15 +107,11 @@
 		<section class="hero">
 			<h1>
 				<span class="line" style="--i: 0">Hi, I'm <em>Jyri</em>.</span>
-				<span class="line" style="--i: 1">Curious <em>by nature</em>.</span>
 			</h1>
 
-			<p class="lede" style="--i: 2">
-				Building and experimenting is less something I do than something I am. I like what's
-				visual and simple — and time outdoors, which is usually both.
-			</p>
+			<p class="lede" style="--i: 1">Welcome to my corner of the internet.</p>
 
-			<nav class="links" style="--i: 3" aria-label="Elsewhere">
+			<nav class="links" style="--i: 2" aria-label="Elsewhere">
 				{#each links as link (link.href)}
 					<a href={link.href} target="_blank" rel="noreferrer noopener">
 						{link.label}
@@ -124,8 +120,8 @@
 				{/each}
 			</nav>
 
-			<p class="colophon" style="--i: 4">
-				This page is one of the experiments — SvelteKit, hand-written canvas &amp; WebGL.
+			<p class="colophon" style="--i: 3">
+				Built with SvelteKit · hand-written canvas &amp; WebGL.
 			</p>
 		</section>
 	{/key}
@@ -172,7 +168,9 @@
 	}
 
 	.hero {
-		max-width: 48rem;
+		/* Short copy — let the card shrink to it rather than leaving dead space. */
+		width: fit-content;
+		max-width: min(100%, 48rem);
 		margin: auto 0;
 		padding: clamp(1.15rem, 3.5vw, 2.75rem);
 		border-radius: var(--card-radius);
