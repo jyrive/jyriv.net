@@ -1,75 +1,15 @@
 <script>
-	import { onMount } from 'svelte';
-	import SceneSwitcher from '$lib/SceneSwitcher.svelte';
-	import { scenes, resolveScene, STORAGE_KEY } from '$lib/scenes/index.js';
+	import { resolve } from '$app/paths';
+	import { scene } from '$lib/scene.svelte.js';
+	import { scenes } from '$lib/scenes/index.js';
 
 	const links = [
 		{ label: 'GitHub', href: 'https://github.com/jyrive' },
 		{ label: 'Email', href: 'mailto:jyrive@gmail.com' }
 	];
 
-	let current = $state(scenes[0].id);
-	let mounted = $state(false);
 	let tiltX = $state(0);
 	let tiltY = $state(0);
-
-	const active = $derived(resolveScene(current));
-
-	onMount(() => {
-		const fromUrl = new URLSearchParams(location.search).get('s');
-		let stored = null;
-		try {
-			stored = localStorage.getItem(STORAGE_KEY);
-		} catch {
-			// Private browsing — the default scene is fine.
-		}
-		current = resolveScene(fromUrl ?? stored).id;
-		mounted = true;
-	});
-
-	// Keep the palette, the stored preference and the shareable URL in step.
-	$effect(() => {
-		if (!mounted) return;
-		document.documentElement.setAttribute('data-scene', current);
-		try {
-			localStorage.setItem(STORAGE_KEY, current);
-		} catch {
-			// Ignore — persistence is a nicety, not a requirement.
-		}
-		const url = new URL(location.href);
-		url.searchParams.set('s', current);
-		history.replaceState(history.state, '', url);
-	});
-
-	/** @param {number} delta */
-	function step(delta) {
-		const i = scenes.findIndex((s) => s.id === current);
-		current = scenes[(i + delta + scenes.length) % scenes.length].id;
-	}
-
-	/** @param {KeyboardEvent} e */
-	function onKeydown(e) {
-		if (e.metaKey || e.ctrlKey || e.altKey) return;
-		const target = e.target;
-		if (
-			target instanceof HTMLElement &&
-			(target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
-		) {
-			return;
-		}
-
-		const n = Number(e.key);
-		if (Number.isInteger(n) && n >= 1 && n <= scenes.length) {
-			current = scenes[n - 1].id;
-			e.preventDefault();
-		} else if (e.key === 'ArrowRight') {
-			step(1);
-			e.preventDefault();
-		} else if (e.key === 'ArrowLeft') {
-			step(-1);
-			e.preventDefault();
-		}
-	}
 
 	/** @param {MouseEvent} e */
 	function onMousemove(e) {
@@ -86,14 +26,7 @@
 	/>
 </svelte:head>
 
-<svelte:window onkeydown={onKeydown} onmousemove={onMousemove} />
-
-{#if mounted}
-	{#key active.id}
-		{@const Backdrop = active.component}
-		<Backdrop />
-	{/key}
-{/if}
+<svelte:window onmousemove={onMousemove} />
 
 <main style="--tilt-x: {tiltX}deg; --tilt-y: {tiltY}deg">
 	<header>
@@ -103,7 +36,7 @@
 		</span>
 	</header>
 
-	{#key current}
+	{#key scene.current}
 		<section class="hero">
 			<h1>
 				<span class="line" style="--i: 0">Hi, I'm <em>Jyri</em>.</span>
@@ -112,6 +45,10 @@
 			<p class="lede" style="--i: 1">Welcome to my corner of the internet.</p>
 
 			<nav class="links" style="--i: 2" aria-label="Elsewhere">
+				<a class="primary" href="{resolve('/blog')}/">
+					Blog
+					<span aria-hidden="true">→</span>
+				</a>
 				{#each links as link (link.href)}
 					<a href={link.href} target="_blank" rel="noreferrer noopener">
 						{link.label}
@@ -126,8 +63,6 @@
 		</section>
 	{/key}
 </main>
-
-<SceneSwitcher {scenes} {current} onselect={(id) => (current = id)} />
 
 <style>
 	main {
@@ -158,7 +93,7 @@
 		letter-spacing: 0.4em;
 		text-transform: uppercase;
 		font-weight: 600;
-		color: color-mix(in srgb, var(--accent) 80%, white);
+		color: var(--mark);
 	}
 
 	.hint {
@@ -178,7 +113,7 @@
 		border: 1px solid var(--card-border);
 		backdrop-filter: blur(18px) saturate(150%);
 		-webkit-backdrop-filter: blur(18px) saturate(150%);
-		box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+		box-shadow: var(--shadow);
 		transform: perspective(1200px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
 		transition:
 			background 0.5s ease,
@@ -192,7 +127,7 @@
 		font-family: var(--font-display);
 		/* Bound by height as well as width so the card never outgrows short
 		   viewports — the mono and wide-tracking palettes wrap sooner. */
-		font-size: var(--h1-size, clamp(1.8rem, min(6.4vw, 9vh), 4.4rem));
+		font-size: clamp(1.8rem, min(6.4vw, 9vh), 4.4rem);
 		line-height: 1.04;
 		font-weight: 800;
 		letter-spacing: var(--tracking);
@@ -256,6 +191,12 @@
 			transform 0.18s ease,
 			background 0.18s ease,
 			border-color 0.18s ease;
+	}
+
+	/* The one link that goes somewhere on this site. */
+	.links a.primary {
+		background: color-mix(in srgb, var(--accent) 16%, transparent);
+		border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 	}
 
 	.links a span {
@@ -333,7 +274,7 @@
 		}
 
 		h1 {
-			font-size: var(--h1-size, clamp(1.4rem, min(5vw, 6.4vh), 2.4rem));
+			font-size: clamp(1.4rem, min(5vw, 6.4vh), 2.4rem);
 		}
 
 		.colophon {
