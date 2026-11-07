@@ -1,8 +1,8 @@
 import FlowField from './FlowField.svelte';
 import Plasma from './Plasma.svelte';
-import Glyphs from './Glyphs.svelte';
 import Swarm from './Swarm.svelte';
 import Synth from './Synth.svelte';
+import Car from './Car.svelte';
 
 /**
  * The backdrops you can switch between. `id` doubles as the `?s=` query value
@@ -40,18 +40,18 @@ export const scenes = [
 		component: Swarm
 	},
 	{
-		id: 'glyphs',
-		name: 'Terminal',
-		tagline: 'Phosphor rain that runs hot where you hover.',
-		swatch: ['#6bffc0', '#ffc45c'],
-		component: Glyphs
-	},
-	{
 		id: 'synth',
 		name: 'Outrun',
 		tagline: 'An endless neon grid and a sun that never quite sets.',
 		swatch: ['#ff2e94', '#78fff6'],
 		component: Synth
+	},
+	{
+		id: 'car',
+		name: 'Car',
+		tagline: 'A car on a turntable. Sweep across to turn it right round.',
+		swatch: ['#5fd3a3', '#cfe4ff'],
+		component: Car
 	}
 ];
 

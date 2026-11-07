@@ -1,12 +1,17 @@
 <script>
 	/**
+	 * `compact` drops the tagline and `hidden` slides the dock away — one less
+	 * thing in the way while you read.
+	 *
 	 * @type {{
 	 *   scenes: import('./scenes/index.js').Scene[],
 	 *   current: string,
-	 *   onselect: (id: string) => void
+	 *   onselect: (id: string) => void,
+	 *   compact?: boolean,
+	 *   hidden?: boolean
 	 * }}
 	 */
-	let { scenes, current, onselect } = $props();
+	let { scenes, current, onselect, compact = false, hidden = false } = $props();
 
 	const active = $derived(scenes.find((s) => s.id === current) ?? scenes[0]);
 
@@ -27,8 +32,10 @@
 	});
 </script>
 
-<div class="dock-wrap">
-	<p class="tagline" aria-live="polite">{active.tagline}</p>
+<div class="dock-wrap" class:hidden>
+	{#if !compact}
+		<p class="tagline" aria-live="polite">{active.tagline}</p>
+	{/if}
 
 	<div class="dock" role="group" aria-label="Background scene">
 		{#each scenes as scene, i (scene.id)}
@@ -65,6 +72,15 @@
 		align-items: center;
 		gap: 0.6rem;
 		max-width: min(100vw - 1rem, 60rem);
+		transition:
+			transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+			opacity 0.35s ease;
+	}
+
+	.dock-wrap.hidden {
+		transform: translate(-50%, calc(100% + 2rem));
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	.tagline {
@@ -85,7 +101,7 @@
 		border: 1px solid var(--card-border);
 		backdrop-filter: blur(16px) saturate(160%);
 		-webkit-backdrop-filter: blur(16px) saturate(160%);
-		box-shadow: 0 18px 45px -18px rgba(0, 0, 0, 0.85);
+		box-shadow: var(--shadow-dock);
 		max-width: 100%;
 		overflow-x: auto;
 		scrollbar-width: none;
@@ -165,6 +181,7 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.dock-wrap,
 		.scene {
 			transition: none;
 		}
